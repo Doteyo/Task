@@ -8,7 +8,7 @@ import numpy as np
 
 
 class Report:
-    year_prof_sal = year_prof_vacs = border = a = ""
+    year_prof_sal = year_prof_vacs = border = ""
 
     def __init__(self, year_sal, year_vacs, year_prof_sal, year_prof_vacs, city_sal, city_part):
         self.year_prof_sal = year_prof_sal
