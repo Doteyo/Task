@@ -8,36 +8,13 @@ import numpy as np
 
 
 class Report:
-    """Класс для сбора информации и генерации по ней изображения графиков или таблицу xlsx
-
-
-    Attributes:
-        year_prof_sal (dict(int,int)): Словарь содержащий динамику уровня зп по годам для выбранной профессии
-        year_prof_vacs (dict(int,int)): Словарь содержащий кол-во вакансий по годам для выбранной профессии
-        years_l (list(int)): Список годов для общей статистики
-        year_sal_l (list(int)): Список зп для общей статистики
-        year_prof_sal_l (list(int)): Список зп по годам для выбранной профессии с нулями, где профессия не появлялась
-        year_vacs_l (list(str)): Список кол-ва вакансий по годам
-        year_prof_vacs_l (list(str)): Список кол-ва вакансий по годам для выбранной профессии
-        city_A_l (list(str)): Список городов для средней зп
-        sal_A_l (list(int)): Список средних зп по городам
-        city_B_l (list(str)): Список городов для долей от общего кол-ва вакансий
-        part_B_l (list(float)): Список соотношений от общего кол-ва вакансий
-    """
-    year_prof_sal = year_prof_vacs = border = ""
+<<<<<<< HEAD
+    year_prof_sal = year_prof_vacs = border = a = ""
+=======
+    year_prof_sal = year_prof_vacs = border = _ = ""
+>>>>>>> develop
 
     def __init__(self, year_sal, year_vacs, year_prof_sal, year_prof_vacs, city_sal, city_part):
-        """Инициализирует Report,
-
-
-        Args:
-            :param year_sal: Словарь с средней зп по годам
-            :param year_vacs: Словарь с кол-вом профессий по годам
-            :param year_prof_sal: Словарь с средней зп по годам для выбранной профессии
-            :param year_prof_vacs: Словарь с кол-вом профессий по годам для выбранной профессии
-            :param city_sal: Словарь с уровнем зп по городам
-            :param city_part: Словарь с долей вакансий по городам
-        """
         self.year_prof_sal = year_prof_sal
         self.year_prof_vacs = year_prof_vacs
         self.years_l = [*year_sal.keys()]
@@ -51,24 +28,14 @@ class Report:
         self.part_B_l = [*city_part.values()]
 
     def print_data(self):
-        """Выводит значения в консоль
-
-
-        """
-
-        print(f"Динамика уровня зарплат по годам: {dict(zip(self.years_l, self.year_sal_l))}")
-        print(f"Динамика количества вакансий по годам: {dict(zip(self.years_l, self.year_vacs_l))}")
+        print(f"Динамика уровня зарплат по годам: {dict(zip(self.years_l,self.year_sal_l))}")
+        print(f"Динамика количества вакансий по годам: {dict(zip(self.years_l,self.year_vacs_l))}")
         print(f"Динамика уровня зарплат по годам для выбранной профессии: {self.year_prof_sal}")
         print(f"Динамика количества вакансий по годам для выбранной профессии: {self.year_prof_vacs}")
-        print(f"Уровень зарплат по городам (в порядке убывания): {dict(zip(self.city_A_l, self.sal_A_l))}")
-        print(f"Доля вакансий по городам (в порядке убывания): {dict(zip(self.city_B_l, self.part_B_l))}")
+        print(f"Уровень зарплат по городам (в порядке убывания): {dict(zip(self.city_A_l,self.sal_A_l))}")
+        print(f"Доля вакансий по городам (в порядке убывания): {dict(zip(self.city_B_l,self.part_B_l))}")
 
     def generate_excel(self):
-        """Создаёт report.xlsx файл с предоставленными данными
-
-
-        """
-
         wb = openpyxl.Workbook()
         ws1 = wb.active
         ws1.title = "Статистика по годам"
@@ -87,25 +54,9 @@ class Report:
         wb.save("report.xlsx")
 
     def twod_array(self, data: list):
-        """ Переделывает каждый элемент листа в отделынй список
-
-
-        :param data: Список с данными
-        :return: list(list()) Список с списками
-        """
-
         return list(map(lambda x: [x], data))
 
     def fill_columns(self, start_col, start_row, sheet, arrays: list):
-        """ Заполняет столбцы таблицы по данным
-
-
-        :param start_col: Индекс начального столбца
-        :param start_row: Индекс начальной строки
-        :param sheet: Страница excel для записис
-        :param arrays: Список с списками, где каждый список это столбец
-        """
-
         max_col_index = len(arrays) - 1
         max_row_index = len(max(arrays, key=len))
         i = 0
@@ -122,27 +73,15 @@ class Report:
             i += 1
 
     def _format_column_width(self, sheet1, sheet2):
-        """ Выставляет ширину столбцам
-
-        :param sheet1: Лист1
-        :param sheet2: Лист2
-        """
         self._set_max_width_and_styles(sheet1, len(self.years_l) + 1)
         self._set_max_width_and_styles(sheet2, len(self.city_A_l) + 10)
 
     def _set_max_width_and_styles(self, sheet, length):
-        """ Устанавливает ширину столбца по максимальн длинной строке в столбце
-
-        :param sheet: Лист excel
-        :param length: Глубина поиска в столбце
-        """
         for col in sheet.iter_cols(max_col=5, min_row=1, max_row=length):
             sheet.column_dimensions[col[0].column_letter].width = \
                 len(str(max(col, key=lambda x: len(str(x.value)) if x.value is not None else 0).value)) + 2
 
     def generate_image(self):
-        """ Создаёт изображение с графиками по данным
-        """
         figure, axis = plt.subplots(2, 2)
         bar_x = np.arange(len(self.years_l))
         axis[0, 0].bar(bar_x - 0.2, self.year_sal_l, 0.4, label="средняя з/п")
@@ -155,7 +94,7 @@ class Report:
         axis[0, 1].bar(bar_x + 0.2, self.year_prof_vacs_l, 0.4, label=f"Количество вакансий \n{prof_name}")
         axis[0, 1].set_xticks(bar_x, self.years_l, rotation=90, fontsize=8)
         axis[0, 1].set_title("Количество вакансий по годам")
-        axis[0, 1].legend(loc="upper left", fontsize=8)
+        axis[0, 1].legend(loc="upper left",fontsize=8)
         axis[0, 1].grid(visible=True, axis="y")
         for i in range(len(self.city_A_l)):
             if self.city_A_l[i].count("-") == 1 or self.city_A_l[i].count(" ") == 1:
@@ -165,7 +104,7 @@ class Report:
         axis[1, 0].invert_yaxis()
         axis[1, 0].grid(visible=True, axis="x")
         axis[1, 0].set_title("Уровень зарплат по городам")
-        self.part_B_l = [1 - sum(self.part_B_l)] + self.part_B_l
+        self.part_B_l = [1-sum(self.part_B_l)] + self.part_B_l
         self.city_B_l = ["Другие"] + self.city_B_l
         axis[1, 1].pie(self.part_B_l, labels=self.city_B_l, textprops={'fontsize': 6})
         axis[1, 1].set_title("Доля вакансий по городам")
@@ -174,20 +113,7 @@ class Report:
 
 
 class ProfKeys:
-    """ Класс для хранения индексов нужных строк
-        Attributes:
-            name (str): Название
-            salary_from (int): Мин зп
-            salary_to (int): Макс зп
-            salary_currency (str): Валюта зп
-            area_name (str): Место вакансии
-            published_at (str): Дата публикации
-    """
     def __init__(self, headers):
-        """ Инициализирует класс с данными
-
-        :param headers: Список с заголовками
-        """
         self.name = headers.index('name')
         self.salary_from = headers.index('salary_from')
         self.salary_to = headers.index('salary_to')
@@ -220,26 +146,12 @@ count_city_vacs = {}
 
 
 def fill(cur: dict, ref: dict, filler):
-    """ Заполняет словарь ключами из второго словаря с введённым значением
-
-
-    :param cur: Текущий словарь
-    :param ref: Словарь с ключами
-    :param filler: Значение
-    """
     if len(cur) == 0:
         for x in ref.keys():
             cur[x] = filler
 
 
 def fill_gaps(cur: dict, ref: dict, filler):
-    """ Заполняет словарь значением filler если в temp нет ключа из ref
-
-    :param cur: Заполняемый словарь
-    :param ref: Эталонный словарь
-    :param filler: Значение для заполнения
-    :return: dict Заполненый словарь
-    """
     temp = cur
     for x in ref.keys():
         if x not in temp:
@@ -248,42 +160,19 @@ def fill_gaps(cur: dict, ref: dict, filler):
 
 
 def year(ls):
-    """ Извлекает год из списка
-
-    :param ls: Список
-    :return: int Год из списка
-    """
     return int(ls[Keys.published_at][0:4])
 
 
 def sal(*sal_list):
-    """ Расчитывает среднюю зарплату
-
-
-    :param sal_list:  Список параметров для расчёта зп
-    :return: float Средняя зп
-    """
     return currency_to_rub[sal_list[2]] * (float(sal_list[0]) + float(sal_list[1])) / 2
 
 
 def for_loop_div(key_source: dict, divide: dict, action):
-    """ Выполняет action от divide[x] и key_source[x] для каждого ключа из key_source
-
-
-    :param key_source: Словарь с ключами
-    :param divide: Словарь для заполнения
-    :param action: lambda/def/method от двух агрументов
-    """
     for x in key_source.keys():
         divide[x] = action(divide[x], key_source[x])
 
 
 def csv_reader(file_name):
-    """ Считывает данные из csv файла
-
-    :param file_name: Имя файла с расщирением
-    :return: list Список данных
-    """
     file = codecs.open(file_name, 'r', 'utf_8_sig')
     reader = csv.reader(file)
     data = list(reader)
@@ -292,12 +181,6 @@ def csv_reader(file_name):
 
 
 def addToDict(key_val, dict, val):
-    """ Считает колво вхождений значения в словарь
-
-    :param key_val: Ключ для словаря
-    :param dict: Словарь - счётчик
-    :param val: Значение для прибавления
-    """
     if key_val in dict.keys():
         dict[key_val] += val
     else:
@@ -305,12 +188,6 @@ def addToDict(key_val, dict, val):
 
 
 def create_dicts(data, name):
-    """ Создаёт словари для заполнения Report класса
-
-    :param data: Данные
-    :param name: Имя профессии
-    :return: int Общее число вакансий
-    """
     number = 0
     for line in data:
         if all(line):
@@ -331,10 +208,6 @@ def create_dicts(data, name):
 
 
 def calculate_part_city(num):
-    """ Процент от всего кол-ва вакансий по городам
-
-    :param num: Число всех вакансий
-    """
     for x in count_city_vacs.keys():
         calc_num = Decimal(count_city_vacs[x] / num).quantize(Decimal("1.0000"))
         if calc_num >= 0.01:
@@ -343,10 +216,6 @@ def calculate_part_city(num):
 
 
 def alphabetic_sort(ls: list):
-    """ Сортирует список кортежей по алфавиту и по значению в обратном порядке
-
-    :param ls: Список
-    """
     temp_list = []
     for i in range(1, len(ls)):
         if ls[i][1] == ls[i - 1][1]:
