@@ -5,6 +5,7 @@ import openpyxl
 from openpyxl.styles import Font, Border, Side
 from matplotlib import pyplot as plt
 import numpy as np
+import doctest
 
 
 class Report:
@@ -187,6 +188,16 @@ class ProfKeys:
         """ Инициализирует класс с данными
 
         :param headers: Список с заголовками
+
+        >>> type(ProfKeys(['name','salary_from','salary_to','salary_currency','area_name','published_at'])).__name__
+        'ProfKeys'
+
+        >>> ProfKeys(['name','salary_from','salary_to','salary_currency','area_name','published_at']).area_name
+        4
+
+        >>> ProfKeys(['name','salary_from','salary_to', 'sos','salary_currency','area_name','published_at']).area_name
+        5
+
         """
         self.name = headers.index('name')
         self.salary_from = headers.index('salary_from')
@@ -239,6 +250,12 @@ def fill_gaps(cur: dict, ref: dict, filler):
     :param ref: Эталонный словарь
     :param filler: Значение для заполнения
     :return: dict Заполненый словарь
+
+    >>> fill_gaps({},{"a": 1,'b': 2},0)
+    {'a': 0, 'b': 0}
+
+    >>> fill_gaps({'a': 5},{"a": 1,'b': 2},'yes')
+    {'a': 5, 'b': 'yes'}
     """
     temp = cur
     for x in ref.keys():
@@ -252,6 +269,15 @@ def year(ls):
 
     :param ls: Список
     :return: int Год из списка
+
+    >>> Keys.published_at = 2
+    >>> year(["This",'is','5'])
+    5
+
+    >>> Keys.published_at = 2
+    >>> year(["This",'is','12345'])
+    1234
+
     """
     return int(ls[Keys.published_at][0:4])
 
@@ -262,6 +288,12 @@ def sal(*sal_list):
 
     :param sal_list:  Список параметров для расчёта зп
     :return: float Средняя зп
+
+    >>> sal(20000,50000,'RUR')
+    35000.0
+
+    >>> sal(12345,69420,'BYR')
+    977500.575
     """
     return currency_to_rub[sal_list[2]] * (float(sal_list[0]) + float(sal_list[1])) / 2
 
@@ -297,6 +329,16 @@ def addToDict(key_val, dict, val):
     :param key_val: Ключ для словаря
     :param dict: Словарь - счётчик
     :param val: Значение для прибавления
+
+    >>> temp_dict = {}
+    >>> addToDict('a',temp_dict,1)
+    >>> temp_dict
+    {'a': 1}
+
+    >>> addToDict('a', temp_dict,5)
+    >>> addToDict('b', temp_dict,'gg')
+    >>> temp_dict
+    {'a': 6, 'b': 'gg'}
     """
     if key_val in dict.keys():
         dict[key_val] += val
@@ -374,3 +416,7 @@ report = Report(salary_all_years, count_all_vacs, salary_prof_years, count_prof_
                 dict(city_part_vacs[0:10]))
 report.print_data()
 report.generate_image()
+
+
+if __name__ == '__main__':
+    doctest.testmod()
