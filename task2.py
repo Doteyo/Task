@@ -6,6 +6,7 @@ from openpyxl.styles import Font, Border, Side
 from matplotlib import pyplot as plt
 import numpy as np
 import doctest
+import unittest
 
 
 class Report:
@@ -184,6 +185,7 @@ class ProfKeys:
             area_name (str): Место вакансии
             published_at (str): Дата публикации
     """
+
     def __init__(self, headers):
         """ Инициализирует класс с данными
 
@@ -400,23 +402,22 @@ def alphabetic_sort(ls: list):
             temp_list.clear()
 
 
-file_name = input("Введите название файла: ")
-prof_name = input("Введите название профессии: ")
-
-data = csv_reader(file_name)
-Keys = ProfKeys(data.pop(0))
-number_of_vacs = create_dicts(data, prof_name)
-calculate_part_city(number_of_vacs)
-city_part_vacs = sorted(part_city.items(), key=lambda x: x[1], reverse=True)
-city_salary = sorted(salary_city_part.items(), key=lambda x: x[1], reverse=True)
-alphabetic_sort(city_salary)
-fill(salary_prof_years, salary_all_years, 0)
-fill(count_prof_vacs, count_all_vacs, 0)
-report = Report(salary_all_years, count_all_vacs, salary_prof_years, count_prof_vacs, dict(city_salary[0:10]),
-                dict(city_part_vacs[0:10]))
-report.print_data()
-report.generate_image()
-
-
 if __name__ == '__main__':
-    doctest.testmod()
+    file_name = input("Введите название файла: ")
+    prof_name = input("Введите название профессии: ")
+
+    data = csv_reader(file_name)
+    Keys = ProfKeys(data.pop(0))
+    number_of_vacs = create_dicts(data, prof_name)
+    calculate_part_city(number_of_vacs)
+    city_part_vacs = sorted(part_city.items(), key=lambda x: x[1], reverse=True)
+    city_salary = sorted(salary_city_part.items(), key=lambda x: x[1], reverse=True)
+    alphabetic_sort(city_salary)
+    fill(salary_prof_years, salary_all_years, 0)
+    fill(count_prof_vacs, count_all_vacs, 0)
+    report = Report(salary_all_years, count_all_vacs, salary_prof_years, count_prof_vacs, dict(city_salary[0:10]),
+                    dict(city_part_vacs[0:10]))
+    report.print_data()
+    report.generate_image()
+else:
+    Keys = ProfKeys(['name', 'salary_from', 'salary_to', 'salary_currency', 'area_name', 'published_at'])
